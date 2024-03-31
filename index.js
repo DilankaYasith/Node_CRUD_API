@@ -1,9 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const Product = require('./models/product.model')
+const productRoutes = require('./routes/product.route')
 const app = express()
 
+//middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//routes
+app.use('/api/products', productRoutes);
+
+
 
 app.get('/', (req, res) => {
     res.send('Hello from node API server')
@@ -38,34 +46,21 @@ app.get('/', (req, res) => {
         }
     });
 
-    //delete product endpoint4
+    //delete product endpoint
     app.delete('api/products/:id', async (req, res) => {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
             const product = await Product.findByIdAndDelete(id);
-            console.log('id');
-            console.log(id);
-            console.log(product);
-            if(!product){
-                return res.status(404).json({message: 'Product not found'});
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
             }
-            res.status(200).json({message: 'Product deleted successfully'})
+            res.status(200).json({ message: 'Product deleted successfully' });
         } catch (error) {
-            res.status(500).json({message: 'internal server error'})
+            res.status(500).json({ message: 'Internal server error' });
         }
     });
 
 
-    //get all products
-    app.get('/api/products', async (req, res) => {
-        try{
-            const products = await Product.find();
-            res.status(200).json({products});
-        }
-        catch{
-            res.status(500).json({message: error.message})
-        }
-    });
 
     //get product by id
     app.get('/api/products/:id', async (req, res) => {
@@ -81,7 +76,7 @@ app.get('/', (req, res) => {
     mongoose.connect('mongodb+srv://dilanka:Dilanka.2001%40mongodb@backenddb.nusexyd.mongodb.net/Node-API?retryWrites=true&w=majority')
     .then(
         ()=>{
-            console.log('Connected to MongoDB');
+            console.log('Connected to the Database');
             app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
