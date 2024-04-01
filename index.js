@@ -1,6 +1,5 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const Product = require('./models/product.model')
 const productRoutes = require('./routes/product.route')
 const app = express()
 
@@ -12,68 +11,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/products', productRoutes);
 
 
-
 app.get('/', (req, res) => {
     res.send('Hello from node API server')
     });
 
-//create product endpoint
-    app.post('/api/products',async (req, res) => {
-        try{
-           const product = await Product.create(req.body)
-           res.status(200).json({product})
-        }catch{
-            res,status(500).json({message: error.message})
-        }
-    });
 
-    //update product endpoint
-
-    app.put('/api/products/:id', async (req, res) => {
-        try{
-            const {id} = req.params;
-            const product = await Product.findByIdAndUpdate(id, req.body);
-            
-            if(!product){
-                return res.status(404).json({message: 'Product not found'});
-            }
-
-            const updatedProduct = await Product.findById(id);
-
-            res.status(200).json({updatedProduct});
-        }catch{
-            res.status(500).json({message: error.message})
-        }
-    });
-
-    //delete product endpoint
-    app.delete('api/products/:id', async (req, res) => {
-        try {
-            const { id } = req.params;
-            const product = await Product.findByIdAndDelete(id);
-            if (!product) {
-                return res.status(404).json({ message: 'Product not found' });
-            }
-            res.status(200).json({ message: 'Product deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    });
-
-
-
-    //get product by id
-    app.get('/api/products/:id', async (req, res) => {
-        try{
-            const {id} = req.params;
-            const product = await Product.findById(id);
-            res.status(200).json({product});
-        }catch{
-            res.status(500).json({message: 'internal server error'})
-        }
-    });
-
-    mongoose.connect('mongodb+srv://dilanka:Dilanka.2001%40mongodb@backenddb.nusexyd.mongodb.net/Node-API?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://dilanka:Dilanka.2001%40mongodb@backenddb.nusexyd.mongodb.net/Node-API?retryWrites=true&w=majority')
     .then(
         ()=>{
             console.log('Connected to the Database');
